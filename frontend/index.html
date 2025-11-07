@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlyOn – 여행심리지수</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+
+  <body>
+    <header>
+      <div class="header-container">
+        <div class="logo">FlyOn</div>
+        <nav class="nav-links">
+          <a href="#" class="active">홈</a>
+          <a href="#">소개</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section>
+        <h2>대륙 선택하기</h2>
+        <div id="continent-buttons"></div>
+      </section>
+
+      <section id="country-list"></section>
+
+      <section id="country-detail"></section>
+
+      <section id="about-section">
+        <h2>About FlyOn</h2>
+        <p>
+          FlyOn은 공공데이터를 기반으로 환율, 출입국자 수, 소비지출 데이터를 분석하여 여행 적기를 시각적으로
+          보여주는 서비스입니다.
+        </p>
+
+        <h3>데이터 출처</h3>
+        <ul>
+          <li>• 한국수출입은행 – 환율 정보</li>
+          <li>• 법무부 – 출입국자 통계</li>
+          <li>• 한국은행 ECOS – 해외소비지출 통계</li>
+        </ul>
+
+        <button class="about-button">공공데이터로 여행을 더 똑똑하게!</button>
+      </section>
+    </main>
+
+    <footer>
+      <p>© 2025 FlyOn – 공공데이터 기반 여행심리지수 서비스</p>
+    </footer>
+
+    <script src="main.js"></script>
+  </body>
+</html>

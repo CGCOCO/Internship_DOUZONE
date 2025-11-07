@@ -1,0 +1,398 @@
+/* ===========================
+   Global Reset
+=========================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  background-color: #f9fafb;
+  color: #111827;
+  line-height: 1.6;
+}
+
+/* ===========================
+   Header
+=========================== */
+header {
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  height: 64px;
+  padding: 0 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #3b82f6;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #4b5563;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: #3b82f6;
+}
+
+/* ===========================
+   Layout
+=========================== */
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 80px;
+}
+
+/* “대륙 선택하기” 위쪽 간격 */
+.container section:first-of-type {
+  margin-top: 3.5rem; /* 제목 위쪽 여백 늘림 */
+}
+
+/* ===========================
+   대륙 선택하기 버튼
+=========================== */
+#continent-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.continent-btn {
+  background: #e5e7eb;
+  color: #111827;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.continent-btn.active {
+  background: #3b82f6;
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(59, 130, 246, 0.3);
+}
+
+.continent-btn:hover {
+  background: #d1d5db;
+}
+
+/* ===========================
+   국가 카드 목록
+=========================== */
+#country-list {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.8rem;
+}
+
+.country-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+.country-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+.country-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.icon-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.icon {
+  width: 22px;
+  height: 22px;
+  overflow: visible;
+  transition: transform 0.15s ease;
+}
+
+.icon-btn:hover .icon {
+  transform: scale(1.15);
+}
+
+/* 카드 본문 */
+.country-body {
+  margin-top: 1rem;
+}
+
+.country-body .label {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.country-body .sentiment {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 0.2rem;
+}
+
+.country-footer {
+  margin-top: 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 0.8rem;
+}
+
+.country-footer .rate {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.country-footer .change {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* ===========================
+   상세 페이지
+=========================== */
+#country-detail {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px;
+  margin-top: 3rem;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  display: none;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* 차트 영역 */
+.detail-charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.chart-box {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-box canvas {
+  flex: 1;
+  width: 100% !important;
+  height: 220px !important;
+}
+
+/* 닫기 버튼 */
+.close-area {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2.5rem;
+}
+
+#close-detail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #ef4444;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 20px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#close-detail:hover {
+  background: #dc2626;
+  transform: scale(1.05);
+}
+
+/* ===========================
+   About FlyOn
+=========================== */
+#about-section {
+  background: #fff;
+  border-radius: 20px;
+  padding: 50px 40px;
+  margin-top: 6rem; 
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+#about-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+}
+
+#about-section p {
+  color: #374151;
+  margin-bottom: 1.5rem;
+}
+
+#about-section h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-top: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+#about-section ul {
+  list-style: none;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.about-button {
+  display: block;
+  width: 100%;
+  background: #3b82f6;
+  color: white;
+  font-weight: 600;
+  padding: 14px 0;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  margin-top: 2rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.about-button:hover {
+  background: #2563eb;
+}
+
+/* ===========================
+   Footer
+=========================== */
+footer {
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+  padding: 24px 0;
+  margin-top: 4rem;
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+/* ===========================
+   Animations
+=========================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.chart-grid {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.chart-grid canvas {
+  width: 100%;
+  height: 220px !important; /* 그래프 높이 고정 */
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 1.5rem;
+}
+.summary-section {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.summary-box {
+  border-radius: 16px;
+  background: #f9fafb;
+  padding: 1.5rem;
+}
+
+.sentiment-box .label {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+.sentiment-box .score {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+.sentiment-box .status {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 0.3rem;
+}
+
+.info-box h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+}
+.info-box ul {
+  margin-bottom: 0.8rem;
+  color: #4b5563;
+  font-size: 0.9rem;
+}
+.info-box .desc {
+  color: #6b7280;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
