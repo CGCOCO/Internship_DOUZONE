@@ -1,7 +1,7 @@
 // ===============================
-// 📋 FlyOn List JS
+// FlyOn List JS
 // (대륙 선택 + 국가 카드 목록 + 즐겨찾기/알림 + 상세 이동)
-// — 백엔드 연동 버전 —
+// — 백엔드 연동 —
 // ===============================
 
 // 로컬 데이터 로드
@@ -11,7 +11,7 @@ loadData();
 let selectedContinent = "아시아";
 
 // ===============================
-// 🧭 대륙 버튼 렌더링
+// 대륙 버튼 렌더링
 // ===============================
 function renderContinents() {
   const container = document.getElementById("continent-buttons");
@@ -35,7 +35,7 @@ function renderContinents() {
 }
 
 // ===============================
-// 🌍 국가 카드 목록 렌더링
+// 국가 카드 목록 렌더링
 // (여기서 백엔드 실시간 데이터 호출함)
 // ===============================
 async function renderCountries() {
@@ -51,15 +51,18 @@ async function renderCountries() {
   area.innerHTML = "";
 
   // ===============================
-  // 🔥 각 국가별 실시간 여행심리지수 받아오기
+  // 각 국가별 실시간 여행심리지수 받아오기
   // ===============================
   for (const c of list) {
     let realSentiment = c.sentiment; // 기본 더미값
 
     try {
       const res = await fetch(
-        `http://localhost:8080/api/travel/index?country=${c.id.toUpperCase()}`
+        `http://3.27.152.199:8080/api/travel/index?country=${c.id.toUpperCase()}`
       );
+      /*const res = await fetch(
+        `http://localhost:8080/api/travel/index?country=${c.id.toUpperCase()}`
+      );*/
       const data = await res.json();
 
       if (data && typeof data.sentimentIndex !== "undefined") {

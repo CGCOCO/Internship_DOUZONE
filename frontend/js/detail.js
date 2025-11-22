@@ -5,7 +5,7 @@
 loadData();
 
 console.log("✅ detail.js 로드됨");
-console.log("✅ countriesData 존재 여부:", typeof countriesData !== "undefined" ? "OK" : "❌ 없음");
+console.log("✅ countriesData 존재 여부:", typeof countriesData !== "undefined" ? "OK" : "없음");
 console.log("✅ countriesData:", countriesData);
 
 // ===============================
@@ -25,15 +25,27 @@ function getQueryParam(param) {
 // ===============================
 // 여행심리지수 백엔드 호출
 // ===============================
+const API_BASE = "http://3.27.152.199:8080";   // ← EC2 퍼블릭 IP
+
 async function fetchSentiment(countryCode) {
+  try {
+    const res = await fetch(`${API_BASE}/api/travel/index?country=${countryCode}`);
+    return await res.json();
+  } catch (e) {
+    console.error("여행심리지수 API 실패:", e);
+    return null;
+  }
+}
+/*async function fetchSentiment(countryCode) {
   try {
     const res = await fetch(`http://localhost:8080/api/travel/index?country=${countryCode}`);
     return await res.json();
   } catch (e) {
-    console.error("❌ 여행심리지수 API 실패:", e);
+    console.error("여행심리지수 API 실패:", e);
     return null;
   }
 }
+*/
 
 // ===============================
 // 페이지 로드 후 실행
@@ -76,11 +88,13 @@ window.addEventListener("DOMContentLoaded", () => {
 async function renderDetail(c) {
   const box = document.getElementById("country-detail");
   if (!box) {
-    console.error("❌ country-detail 요소를 찾을 수 없습니다.");
+    console.error("country-detail 요소를 찾을 수 없습니다.");
     return;
   }
+  loadSentimentToUI(c.id);
 
-  // ⭐ 백엔드에서 여행심리지수 받아오기
+
+  // 백엔드에서 여행심리지수 받아오기
   const sentimentData = await fetchSentiment(c.id);
   const sentimentIndex = sentimentData ? sentimentData.sentimentIndex : 0;
 
@@ -152,7 +166,7 @@ async function renderDetail(c) {
   </div>
 `;
 
-  // ⭐ 즐겨찾기 / 알림 버튼 이벤트 재연결
+  // 즐겨찾기 / 알림 버튼 이벤트 재연결
   const favBtn = document.getElementById("fav-btn");
   const alertBtn = document.getElementById("alert-btn");
 
@@ -186,7 +200,7 @@ function drawCharts() {
   const ctx3 = document.getElementById("chart3");
 
   if (!ctx1 || !ctx2 || !ctx3) {
-    console.error("❌ 차트 캔버스 요소 없음");
+    console.error("차트 캔버스 요소 없음");
     return;
   }
 
@@ -277,7 +291,7 @@ function toggleAlert(e, id) {
 loadData();
 
 console.log("✅ detail.js 로드됨");
-console.log("✅ countriesData 존재 여부:", typeof countriesData !== "undefined" ? "OK" : "❌ 없음");
+console.log("✅ countriesData 존재 여부:", typeof countriesData !== "undefined" ? "OK" : "없음");
 console.log("✅ countriesData:", countriesData);
 
 // ===============================
