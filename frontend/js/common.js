@@ -6,7 +6,7 @@
 const continents = ["아시아", "유럽", "북아메리카", "오세아니아"];
 
 // 국가별 데이터 (임시 데이터)
-const countriesData = {
+let countriesData = {
   아시아: [
     { id: "jp", name: "일본", flag: "🇯🇵", sentiment: 75, rate: 1250.5, change: -1.2, favorite: false, alert: false },
     { id: "th", name: "태국", flag: "🇹🇭", sentiment: 45, rate: 35.8, change: 0.5, favorite: false, alert: false },
