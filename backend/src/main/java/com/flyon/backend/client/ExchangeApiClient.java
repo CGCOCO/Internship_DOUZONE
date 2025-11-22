@@ -1,12 +1,13 @@
 package com.flyon.backend.client;
 
 import com.flyon.backend.dto.ExchangeItem;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
+@RequiredArgsConstructor
 public class ExchangeApiClient {
 
     @Value("${external-api.exchange.key}")
@@ -15,15 +16,16 @@ public class ExchangeApiClient {
     @Value("${external-api.exchange.url}")
     private String apiUrl;
 
-    public ExchangeItem[] getExchangeItems() {
+    private final WebClient webClient = WebClient.create();
 
-        String finalUrl = apiUrl + "?authkey=" + apiKey + "&data=AP01";
+    public ExchangeItem[] fetchRate() {
 
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<ExchangeItem[]> response =
-                restTemplate.getForEntity(finalUrl, ExchangeItem[].class);
+        String url = apiUrl + "?authkey=" + apiKey + "&data=AP01";
 
-        return response.getBody();
+        return webClient.get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(ExchangeItem[].class)
+                .block(); // 동기화시켜 반환
     }
-
 }

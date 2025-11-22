@@ -2,15 +2,8 @@ package com.flyon.backend.util;
 
 public class TravelIndexCalculator {
 
-    public static double calculate(double exchangeDropRate,
-                                   double outboundIncreaseRate,
-                                   double spendingIncreaseRate) {
+    public static double calculate(double dropRate, double outboundIncrease) {
 
-        double index =
-                (exchangeDropRate * 0.4) +
-                        (outboundIncreaseRate * 0.4) +
-                        (spendingIncreaseRate * 0.2);
-
-        return index;
+        return (outboundIncrease * 0.6) + (dropRate * 0.4);
     }
 }
