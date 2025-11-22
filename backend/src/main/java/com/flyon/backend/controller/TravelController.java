@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/travel")
-@CrossOrigin("*")
+@CrossOrigin(origins = "https://internship-douzone.vercel.app")
 public class TravelController {
 
     private final TravelService travelService;
