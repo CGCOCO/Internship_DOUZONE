@@ -43,7 +43,7 @@ public class TravelService {
 
     public OutboundDto getOutboundRate(String country) {
 
-        OutboundApiResponseDto dto = outboundApiClient.fetchOutboundData();
+        OutboundApiResponseDto dto = outboundApiClient.fetchOutboundData(); //api 호출
         if (dto == null || dto.getData() == null || dto.getData().isEmpty()) {
             return new OutboundDto(0, 0, 0);
         }
