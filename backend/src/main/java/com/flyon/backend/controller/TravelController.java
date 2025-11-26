@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/travel")
-@CrossOrigin(origins = "*")   // ★ CORS 추가
+@CrossOrigin(origins = "*")   // ★ 임시로 CORS 추가 //*이 위험함. 도메인을 넣어서 특정해서 받기.꼭 바꾸기!!
 public class TravelController {
 
     private final TravelService travelService;
@@ -50,7 +50,7 @@ public class TravelController {
         return travelService.getExchangeRate(country);
     }
 
-    // 🔵 출국자 엔드포인트 (정확한 위치!) //칭찬 받음!! -> 환율, 출국자 각각의 controller로!! 나머지 service에서(수정X)
+    // 출국자 엔드포인트 (정확한 위치!) //칭찬 받음!! -> 환율, 출국자 각각의 controller로!! 나머지 service에서(수정X)
     @GetMapping("/outbound")
     public OutboundDto getOutbound(@RequestParam String country) {
         return travelService.getOutboundRate(country);

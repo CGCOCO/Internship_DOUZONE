@@ -19,7 +19,7 @@ public class ExchangeApiClient {
     private final WebClient webClient = WebClient.create();
 
     public ExchangeItem[] fetchRateAP01() {
-        String url = apiUrl + "?authkey=" + apiKey + "&data=AP01";
+        String url = apiUrl + "?authkey=" + apiKey + "&data=AP01"; //당일 환율
         return webClient.get()
                 .uri(url)
                 .retrieve()
@@ -28,7 +28,7 @@ public class ExchangeApiClient {
     }
 
     public ExchangeItem[] fetchRateAP02() {
-        String url = apiUrl + "?authkey=" + apiKey + "&data=AP02";
+        String url = apiUrl + "?authkey=" + apiKey + "&data=AP02"; //전일 환율
         return webClient.get()
                 .uri(url)
                 .retrieve()
