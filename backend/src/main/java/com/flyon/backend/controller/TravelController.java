@@ -1,36 +1,30 @@
 package com.flyon.backend.controller;
 
-import com.flyon.backend.dto.*;
+import com.flyon.backend.dto.TravelIndexDto;
 import com.flyon.backend.service.TravelService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/travel")
-@CrossOrigin(origins = "https://internship-douzone.vercel.app")
-//@CrossOrigin("http://localhost:5173")
+@CrossOrigin(origins = "*")   // ★ CORS 추가
 public class TravelController {
 
     private final TravelService travelService;
 
-    public TravelController(TravelService travelService) {
-        this.travelService = travelService;
-    }
-
     @GetMapping("/exchange")
-    public ExchangeDto getExchange(@RequestParam String country) {
-        return travelService.getExchangeRate(country);
-    }
-
-    @GetMapping("/outbound")
-    public OutboundDto getOutbound(@RequestParam String country) {
-        return travelService.getOutboundRate(country);
+    public ResponseEntity<?> getExchange(@RequestParam String country) {
+        return ResponseEntity.ok(travelService.getExchangeRate(country));
     }
 
     @GetMapping("/index")
-    public TravelIndexDto getTravelIndex(@RequestParam String country) {
-        return travelService.getTravelIndex(country);
+    public ResponseEntity<TravelIndexDto> getTravelIndex(@RequestParam String country) {
+        return ResponseEntity.ok(travelService.getTravelIndex(country));
     }
 }
+
 
 /*package com.flyon.backend.controller;
 

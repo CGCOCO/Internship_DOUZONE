@@ -18,14 +18,22 @@ public class ExchangeApiClient {
 
     private final WebClient webClient = WebClient.create();
 
-    public ExchangeItem[] fetchRate() {
-
+    public ExchangeItem[] fetchRateAP01() {
         String url = apiUrl + "?authkey=" + apiKey + "&data=AP01";
-
         return webClient.get()
                 .uri(url)
                 .retrieve()
                 .bodyToMono(ExchangeItem[].class)
-                .block(); // 동기화시켜 반환
+                .block();
+    }
+
+    public ExchangeItem[] fetchRateAP02() {
+        String url = apiUrl + "?authkey=" + apiKey + "&data=AP02";
+        return webClient.get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(ExchangeItem[].class)
+                .block();
     }
 }
+

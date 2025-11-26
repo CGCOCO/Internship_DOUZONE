@@ -1,11 +1,18 @@
 // ===============================
-// 🌍 FlyOn 공통 데이터 및 유틸 함수
+// 공통 설정: 로컬 백엔드 API 경로
+// ===============================
+
+// 모든 파일(list.js, detail.js)이 이 API_BASE를 사용하도록 통일해야 함
+const API_BASE = "http://localhost:8080/api/travel";
+
+// ===============================
+// FlyOn 공통 데이터 및 유틸 함수
 // ===============================
 
 // 대륙 목록
 const continents = ["아시아", "유럽", "북아메리카", "오세아니아"];
 
-// 국가별 데이터 (임시 데이터)
+// 국가별 기본 데이터 (초기 로컬 스토리지용)
 let countriesData = {
   아시아: [
     { id: "jp", name: "일본", flag: "🇯🇵", sentiment: 75, rate: 1250.5, change: -1.2, favorite: false, alert: false },
@@ -28,8 +35,9 @@ let countriesData = {
   ],
 };
 
+
 // ===============================
-// 🎨 유틸 함수
+// 유틸 함수
 // ===============================
 function getSentimentColor(index) {
   if (index < 50) return "#22C55E";
@@ -43,8 +51,9 @@ function getSentimentLabel(index) {
   return "성수기";
 }
 
+
 // ===============================
-// 📈 Chart.js 로드
+// Chart.js 로드
 // ===============================
 function loadChartJS(callback) {
   if (window.Chart) {
@@ -57,11 +66,9 @@ function loadChartJS(callback) {
   document.head.appendChild(script);
 }
 
+
 // ===============================
-// 🔍 URL 파라미터 가져오기 (상세페이지용)
-// ===============================
-// ===============================
-// 🧭 URL 파라미터 디코딩 함수 (한글 안전 버전)
+// URL 파라미터 가져오기
 // ===============================
 function getQueryParam(param) {
   const urlParams = new URLSearchParams(window.location.search);
@@ -74,7 +81,10 @@ function getQueryParam(param) {
   }
 }
 
-// ✅ 공통 저장 및 로드 함수
+
+// ===============================
+// 로컬 스토리지 저장/로드
+// ===============================
 function saveData() {
   localStorage.setItem("countriesData", JSON.stringify(countriesData));
 }
@@ -87,4 +97,3 @@ function loadData() {
 if (localStorage.getItem("countriesData")) {
   countriesData = JSON.parse(localStorage.getItem("countriesData"));
 }
-

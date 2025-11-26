@@ -1,66 +1,48 @@
 // ===============================
-// FlyOn Detail JS (최종 안정화 버전)
+// FlyOn Detail JS (최종 패치본)
 // ===============================
-
+const HISTORY_API = "http://localhost:8080/api/exchange/history";
+// 로컬 저장된 즐겨찾기/알림 데이터 로드
 loadData();
 
-console.log("✅ detail.js 로드됨");
-console.log("✅ countriesData 존재 여부:", typeof countriesData !== "undefined" ? "OK" : "없음");
-console.log("✅ countriesData:", countriesData);
 
 // ===============================
-// URL 파라미터 디코딩 함수
+// 여행심리지수 API
 // ===============================
-function getQueryParam(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  const value = urlParams.get(param);
-  if (!value) return null;
-  try {
-    return decodeURIComponent(value);
-  } catch {
-    return value;
-  }
-}
-
-// ===============================
-// 여행심리지수 백엔드 호출
-// ===============================
-const API_BASE = "http://3.27.152.199:8080";   // ← EC2 퍼블릭 IP
-
 async function fetchSentiment(countryCode) {
   try {
-    const res = await fetch(`${API_BASE}/api/travel/index?country=${countryCode}`);
+    const res = await fetch(`${API_BASE}/index?country=${countryCode.toUpperCase()}`);
     return await res.json();
   } catch (e) {
-    console.error("여행심리지수 API 실패:", e);
+    console.error("여행심리지수 API 실패:", countryCode, e);
     return null;
   }
 }
-/*async function fetchSentiment(countryCode) {
-  try {
-    const res = await fetch(`http://localhost:8080/api/travel/index?country=${countryCode}`);
-    return await res.json();
-  } catch (e) {
-    console.error("여행심리지수 API 실패:", e);
-    return null;
-  }
-}
-*/
+
 
 // ===============================
-// 페이지 로드 후 실행
+// 환율 히스토리 API
+// ===============================
+async function fetchRateHistory(countryCode) {
+  try {
+    const res = await fetch(`${HISTORY_API}?country=${countryCode.toUpperCase()}`);
+    return await res.json();
+  } catch (e) {
+    console.error("환율 히스토리 로드 실패:", e);
+    return null;
+  }
+}
+
+
+// ===============================
+// 페이지 로드 시 실행
 // ===============================
 window.addEventListener("DOMContentLoaded", () => {
-  console.log("🧭 URL 확인:", window.location.search);
-
   const id = getQueryParam("id");
   const continent = getQueryParam("continent");
 
-  console.log("🌍 continent =", continent);
-  console.log("🧭 id =", id);
-
   if (!id || !continent) {
-    document.body.innerHTML += "<p style='text-align:center;color:#6b7280;'>파라미터 오류</p>";
+    document.body.innerHTML += "<p style='text-align:center;color:#6b7280;'>잘못된 접근입니다.</p>";
     return;
   }
 
@@ -71,36 +53,34 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   const country = countryList.find((c) => c.id === id);
-  console.log("✅ country:", country);
-
   if (!country) {
-    document.body.innerHTML += "<p style='text-align:center;color:#6b7280;'>국가 정보를 불러올 수 없습니다.</p>";
+    document.body.innerHTML += "<p style='text-align:center;color:#6b7280;'>국가 정보를 찾을 수 없습니다.</p>";
     return;
   }
 
-  // DOM 렌더링
-  setTimeout(() => renderDetail(country), 100);
+  renderDetail(country);
 });
 
+
 // ===============================
-// 상세 페이지 렌더링 함수
+// 상세 페이지 렌더링
 // ===============================
 async function renderDetail(c) {
   const box = document.getElementById("country-detail");
-  if (!box) {
-    console.error("country-detail 요소를 찾을 수 없습니다.");
-    return;
-  }
-  loadSentimentToUI(c.id);
+  if (!box) return;
 
-
-  // 백엔드에서 여행심리지수 받아오기
+  // ------------------------------------
+  // 심리지수 API 호출
+  // ------------------------------------
   const sentimentData = await fetchSentiment(c.id);
-  const sentimentIndex = sentimentData ? sentimentData.sentimentIndex : 0;
+  const sentimentIndex = sentimentData ? sentimentData.sentimentIndex : c.sentiment;
 
   const sentimentColor = getSentimentColor(sentimentIndex);
   const sentimentLabel = getSentimentLabel(sentimentIndex);
 
+  // ------------------------------------
+  // 상세 UI 렌더링
+  // ------------------------------------
   box.innerHTML = `
   <div class="detail-header">
     <div style="display:flex;align-items:center;gap:0.8rem;">
@@ -166,10 +146,8 @@ async function renderDetail(c) {
   </div>
 `;
 
-  // 즐겨찾기 / 알림 버튼 이벤트 재연결
+  // 즐겨찾기 토글
   const favBtn = document.getElementById("fav-btn");
-  const alertBtn = document.getElementById("alert-btn");
-
   if (favBtn) {
     favBtn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -179,6 +157,8 @@ async function renderDetail(c) {
     });
   }
 
+  // 알림 토글
+  const alertBtn = document.getElementById("alert-btn");
   if (alertBtn) {
     alertBtn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -188,47 +168,73 @@ async function renderDetail(c) {
     });
   }
 
-  loadChartJS(() => drawCharts());
+  // 차트 로드
+  loadChartJS(() => drawCharts(c));
 }
+// ===============================
+// 차트 생성 함수
+// ===============================
+async function drawCharts(c) {
 
-// ===============================
-// 샘플 차트 생성
-// ===============================
-function drawCharts() {
   const ctx1 = document.getElementById("chart1");
   const ctx2 = document.getElementById("chart2");
   const ctx3 = document.getElementById("chart3");
 
   if (!ctx1 || !ctx2 || !ctx3) {
-    console.error("차트 캔버스 요소 없음");
+    console.error("차트 캔버스를 찾을 수 없음");
     return;
+  }
+
+
+  // ------------------------------------------------
+  // chart1 : 환율 히스토리
+  // ------------------------------------------------
+  const historyData = await fetchRateHistory(c.id);
+
+  const dummyLabels = ["1일", "2일", "3일", "4일", "5일", "6일", "7일"];
+  const dummyRates  = [1235, 1242, 1228, 1237, 1250, 1245, 1262];
+
+  let rateLabels = [];
+  let rateValues = [];
+
+  if (historyData && historyData.history && historyData.history.length > 0) {
+    rateLabels = historyData.history.map(h => h.date);
+    rateValues = historyData.history.map(h => h.rate);
+  } else {
+    rateLabels = dummyLabels;
+    rateValues = dummyRates;
   }
 
   new Chart(ctx1, {
     type: "line",
     data: {
-      labels: ["1월", "2월", "3월", "4월", "5월", "6월"],
+      labels: rateLabels,
       datasets: [
         {
           label: "환율 추이",
-          data: [1280, 1265, 1245, 1255, 1260, 1450],
+          data: rateValues,
           borderColor: "#3B82F6",
           backgroundColor: "rgba(59,130,246,0.1)",
           fill: true,
-          tension: 0.4,
-        },
-      ],
+          tension: 0.4
+        }
+      ]
     },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
   });
 
+
+
+  // ------------------------------------------------
+  // chart2 : 출입국자 그래프 (더미 유지)
+  // ------------------------------------------------
   new Chart(ctx2, {
     type: "bar",
     data: {
       labels: ["1월", "2월", "3월", "4월", "5월", "6월"],
       datasets: [
         {
-          label: "출입국자 수 (천명)",
+          label: "출입국자 수",
           data: [120, 130, 145, 155, 170, 185],
           backgroundColor: "#22C55E",
         },
@@ -237,6 +243,11 @@ function drawCharts() {
     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } },
   });
 
+
+
+  // ------------------------------------------------
+  // chart3 : 소비지출 (더미 유지)
+  // ------------------------------------------------
   new Chart(ctx3, {
     type: "line",
     data: {
@@ -256,34 +267,7 @@ function drawCharts() {
   });
 }
 
-// ===============================
-// 즐겨찾기 / 알림 이벤트
-// ===============================
-function toggleFavorite(e, id) {
-  e.stopPropagation();
-  for (const continent in countriesData) {
-    const c = countriesData[continent].find((x) => x.id === id);
-    if (c) {
-      c.favorite = !c.favorite;
-      saveData();
-      break;
-    }
-  }
-  renderCountries();
-}
 
-function toggleAlert(e, id) {
-  e.stopPropagation();
-  for (const continent in countriesData) {
-    const c = countriesData[continent].find((x) => x.id === id);
-    if (c) {
-      c.alert = !c.alert;
-      saveData();
-      break;
-    }
-  }
-  renderCountries();
-}
 
 /*// ===============================
 // FlyOn Detail JS (최종 안정화 버전)
